@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace parser
 {
@@ -22,7 +21,12 @@ namespace parser
         Parser(string[] input, int indexOpenBold, int indexCloseBold)
         {
             s_Function = new string[indexCloseBold - indexOpenBold - 1];
-            for (int i = 1; i <= s_Function.Length; i++) s_Function[i - 1] = input[indexOpenBold + i];
+            func = "";
+            for (int i = 1; i <= s_Function.Length; i++)
+            {
+                s_Function[i - 1] = input[indexOpenBold + i];
+                func += s_Function[i - 1] + " ";
+            }
         }
 
         // Функция замены x
