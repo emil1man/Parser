@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace parser
 {
     public class Parser
     {
+        // Функция в стринговом виде
+        string func;
         // Функция разбитая пробелами
         string[] s_Function;
         // Аргумент функции
@@ -13,6 +15,7 @@ namespace parser
         // Конструктор
         public Parser(string input)
         {
+            func = input;
             s_Function = input.Split(' ');
         }
 
@@ -80,6 +83,7 @@ namespace parser
         // Вычисление
         public double calcFun(double arg)
         {
+            s_Function = func.Split(' ');
             x = arg;
 
             // Кол-во открывающихся и закрывающихся скобок
@@ -92,8 +96,8 @@ namespace parser
                 if (s_Function[i].ToLower() == "pi") s_Function[i] = Pi().ToString();
                 if (s_Function[i].ToLower() == "e") s_Function[i] = Exp().ToString();
                 // Подсчёт открывающих и закрывающих скобок
-                if (s_Function[i].Contains('(')) { oB++; }
-                if (s_Function[i].Contains(')')) { cB++; }
+                if (s_Function[i].Contains("(")) { oB++; }
+                if (s_Function[i].Contains(")")) { cB++; }
             }
             if (oB != cB) throw new Exception("Неверно расставлены скобки.");
 
@@ -105,13 +109,13 @@ namespace parser
                 do
                 {
                     // Ищет индекс самой первой скобки
-                    if (s_Function[i].Contains('('))
+                    if (s_Function[i].Contains("("))
                     {
                         bB++;
                         if (i < ioB) ioB = i;
                     }
                     // Ищет индекс самой последней скобки
-                    if (s_Function[i].Contains(')'))
+                    if (s_Function[i].Contains(")"))
                     {
                         bB--;
                         icB = i;
