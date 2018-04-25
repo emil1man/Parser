@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace parser
 {
@@ -10,12 +11,22 @@ namespace parser
         string[] s_Function;
         // Аргумент функции
         double x;
-
+        // Словарь скобок
+        Dictionary<string, Func<double, double>> brackets;
+        
         // Конструктор
         public Parser(string input)
         {
             func = input;
             s_Function = input.Split(' ');
+            brackets = new Dictionary<string, Func<double, double>>
+            {
+                ["sin("] = Sin,
+                ["cos("] = Cos,
+                ["tan("] = Tan,
+                ["cot("] = Cot,
+                ["("] = x => x
+            };
         }
 
         Parser(string[] input, int indexOpenBold, int indexCloseBold)
@@ -27,6 +38,14 @@ namespace parser
                 s_Function[i - 1] = input[indexOpenBold + i];
                 func += s_Function[i - 1] + " ";
             }
+            brackets = new Dictionary<string, Func<double, double>>
+            {
+                ["sin("] = Sin,
+                ["cos("] = Cos,
+                ["tan("] = Tan,
+                ["cot("] = Cot,
+                ["("] = x => x
+            };
         }
 
         // Функция замены x
@@ -132,39 +151,8 @@ namespace parser
                     {
                         // Вызывается рекурсивно функция подсчёта для скобки
                         Parser p = new Parser(s_Function, ioB, icB);
-                        // Подсчёт sin, cos, и т.д.
-                        switch (s_Function[ioB].ToLower())
-                        {
-                            case "sin(":
-                                {
-                                    s_Function[ioB] = Sin(p.calcFun(x)).ToString();
-                                    break;
-                                }
-                            case "cos(":
-                                {
-                                    s_Function[ioB] = Cos(p.calcFun(x)).ToString();
-                                    break;
-                                }
-                            case "tan(":
-                                {
-                                    s_Function[ioB] = Tan(p.calcFun(x)).ToString();
-                                    break;
-                                }
-                            case "cot(":
-                                {
-                                    s_Function[ioB] = Cot(p.calcFun(x)).ToString();
-                                    break;
-                                }
-                            case "(":
-                                {
-                                    s_Function[ioB] = p.calcFun(x).ToString();
-                                    break;
-                                }
-                            default:
-                                {
-                                    throw new Exception("Не найдена функция " + s_Function[ioB]);
-                                }
-                        }
+                        // Вычисление sin, cos, и т.д.
+                        s_Function[ioB] = brackets[s_Function[ioB].ToLower()](p.calcFun(x)).ToString();
                         // Замещение ячеек массива
                         for (int j = ioB + 1; j <= icB; j++)
                         {
