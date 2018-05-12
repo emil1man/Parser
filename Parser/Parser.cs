@@ -18,15 +18,6 @@ namespace parser
         public Parser(string input)
         {
             func = input;
-            s_Function = input.Split(' ');
-            brackets = new Dictionary<string, Func<double, double>>
-            {
-                ["sin("] = Sin,
-                ["cos("] = Cos,
-                ["tan("] = Tan,
-                ["cot("] = Cot,
-                ["("] = x => x
-            };
         }
 
         Parser(string[] input, int indexOpenBold, int indexCloseBold)
@@ -38,14 +29,6 @@ namespace parser
                 s_Function[i - 1] = input[indexOpenBold + i];
                 func += s_Function[i - 1] + " ";
             }
-            brackets = new Dictionary<string, Func<double, double>>
-            {
-                ["sin("] = Sin,
-                ["cos("] = Cos,
-                ["tan("] = Tan,
-                ["cot("] = Cot,
-                ["("] = x => x
-            };
         }
 
         // Функция замены x
@@ -108,6 +91,14 @@ namespace parser
         {
             s_Function = func.Split(' ');
             x = arg;
+            brackets = new Dictionary<string, Func<double, double>>
+            {
+                ["sin("] = Sin,
+                ["cos("] = Cos,
+                ["tan("] = Tan,
+                ["cot("] = Cot,
+                ["("] = x => x
+            };
 
             // Кол-во открывающихся и закрывающихся скобок
             int oB = 0, cB = 0;
